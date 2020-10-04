@@ -28,7 +28,7 @@ router.route("/money")
 // Default path
 router.route('/')
     .get((req,res)=>{
-        const usertag = req.query.usertag
+        let usertag = req.query.usertag
         if(usertag == undefined || usertag == "") usertag = '%'
         userDB.findUser(usertag).then(response=>{
             if(response == usertag) res.status(201).send(SUCCESS.noContent())
