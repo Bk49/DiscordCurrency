@@ -30,9 +30,9 @@ const userDB = {
 
     async findUser(usertag){
         const conn = db.getConnection()
-        const queryStr = `SELECT * FROM user WHERE usertag = ?`
-        return conn.query(queryStr, usertag).then(rows=>{
-            return rows[0].usertag
+        const queryStr = `SELECT * FROM user WHERE usertag LIKE ?`
+        return conn.query(queryStr, usertag).then((rows)=>{
+            return rows
         }).catch(err=>{
             return err
         }).finally(()=> conn.close())

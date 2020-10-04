@@ -30,8 +30,9 @@ router.route('/')
     .get((req,res)=>{
         let usertag = req.query.usertag
         if(usertag == undefined || usertag == "") usertag = '%'
+        console.log('usertag= ' +usertag)
         userDB.findUser(usertag).then(response=>{
-            if(response == usertag) res.status(201).send(SUCCESS.noContent())
+            if(response.length > 0) res.status(200).send(response)
             else res.status(404).send(ERROR.notFound())
         })
     })
