@@ -25,13 +25,29 @@ router.route("/money")
         })
     })
 
+// Default path
 router.route('/')
     .get((req,res)=>{
         const usertag = req.query.usertag
         if(usertag == undefined || usertag == "") usertag = '%'
-        userDB.findUser(usertag).then(res=>{
-            res.status(201).send(SUCCESS.noContent())
+        userDB.findUser(usertag).then(response=>{
+            if(response == usertag) res.status(201).send(SUCCESS.noContent())
+            else res.status(404).send(ERROR.notFound())
         })
+    })
+    .post((req,res)=>{
+        const usertag = req.query.usertag
+        if(usertag == undefined || usertag == '') return res.status(400).send(ERROR.badReq())
+        userDB.findUser(usertag).then(response=>{
+            if(response == usertag){
+                res.status(400).send(ERROR.dupErr())
+            }else{
+                userDB.addUser(usertag).then(response=>{
+                    res.status(201).send(SUCCESS.noContent())
+                })
+            }
+        })
+        
     })
 
     // DEFAULT ROUTE

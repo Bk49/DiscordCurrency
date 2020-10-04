@@ -6,12 +6,10 @@ const userDB = {
         const conn = db.getConnection()
         const queryStr = 'SELECT money FROM user WHERE usertag = ?'
         return conn.query(queryStr, usertag).then(rows =>{
-            conn.close()
             return rows
         }).catch(err =>{
-            conn.close()
             return err
-        })
+        }).finally(()=>conn.close())
     },
 
     async addMoreMoney(usertag, money){
@@ -24,27 +22,31 @@ const userDB = {
             const total = moneyLeft+money
             return conn.query(queryStr2, [total, usertag])
         }).then(rows=>{
-            conn.close()
             return rows.affectedRows
         }).catch(err=>{
-            conn.close()
             return err   
-        })
+        }).finally(()=>{conn.close()})
     },
 
     async findUser(usertag){
         const conn = db.getConnection()
         const queryStr = `SELECT * FROM user WHERE usertag = ?`
         return conn.query(queryStr, usertag).then(rows=>{
-            conn.close()
             return rows[0].usertag
         }).catch(err=>{
-            conn.close()
             return err
-        })
-    }
+        }).finally(()=> conn.close())
+    },
     
-
+    async addUser(usertag){
+        const conn = db.getConnection()
+        const queryStr = `INSERT INTO user(usertag) VALUES (?)`
+        return conn.query(queryStr, usertag).then(rows=>{
+            return rows
+        }).catch(err=>{
+            return err
+        }).finally(()=> conn.close())
+    }
 }
 
 module.exports = userDB
